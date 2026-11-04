@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-navy: #0b2266;
+  --color-navy-deep: #061540;
+  --color-gold: #d4a843;
+  --color-gold-bright: #e6bd5c;
+  --color-ink: #0b1a3d;
+  --color-muted: #5b6785;
+  --color-paper: #f5f6fa;
+  --color-line: #dde2ee;
+  --color-accent: #0b2266;
+  --color-accent-soft: #e6ebf7;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+/* Navy "blueprint" surface: soft glow + faint grid, like the club site */
+.math-surface {
+  background-color: var(--color-navy-deep);
+  background-image:
+    radial-gradient(
+      ellipse 80% 60% at 75% 30%,
+      rgb(30 70 170 / 0.55),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 10% 90%,
+      rgb(20 50 140 / 0.45),
+      transparent 70%
+    ),
+    linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    56px 56px,
+    56px 56px;
+  color: white;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise {
+  animation: rise 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise,
+  .animate-pop {
+    animation: none;
+  }
 }

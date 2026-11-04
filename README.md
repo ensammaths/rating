@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ENSAM MATHS · Session Feedback
 
-## Getting Started
+Anonymous end-of-session feedback for the ENSAM MATHS club.
 
-First, run the development server:
+- **`/`**: admin dashboard. Create a session, copy its link or show a QR code, see all results.
+- **`/s/<id>`**: the student page. One rating (5 faces) plus two optional comments, about 20 seconds.
+- **`/results/<id>`**: per-session average, distribution and comments, plus CSV export. Refreshes live every 10 s.
+
+No accounts and no logins. Students are anonymous; the browser only remembers locally that it already answered.
+
+> ⚠️ The dashboard has no login, so anyone who knows the site URL can open `/`.
+> Share only the `/s/<id>` links with students.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without database env vars the app uses an in-memory store (data is lost on restart).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy to Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Push this folder to a GitHub repo and **Import** it at <https://vercel.com/new> (or run `npx vercel`).
+2. In the Vercel project, open **Storage → Create / Connect → Upstash for Redis** (free tier is plenty) and connect it to the project.
+   This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically.
+3. **Redeploy** so the new env vars are picked up. The yellow "Running without a database" banner should be gone.
 
-## Learn More
+Any Upstash Redis database works. You can also set `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` yourself (see `.env.example`).
 
-To learn more about Next.js, take a look at the following resources:
+## Data layout (Redis)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Key | Type | Content |
+| --- | --- | --- |
+| `fb:sessions` | sorted set | session ids by creation time |
+| `fb:session:<id>` | JSON | `{ id, title, createdAt, open }` |
+| `fb:responses:<id>` | list | `{ rating, liked, improve, createdAt }` |
