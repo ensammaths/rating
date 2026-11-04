@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { listSessions, usingMemoryStore } from "@/lib/store";
+import { requireAdmin } from "@/lib/auth";
 import CreateSessionForm from "@/components/CreateSessionForm";
 import SessionRow from "@/components/SessionRow";
 import AutoRefresh from "@/components/AutoRefresh";
@@ -8,6 +9,7 @@ import { TopBar } from "@/components/Brand";
 
 async function Sessions() {
   await connection();
+  await requireAdmin();
   const sessions = await listSessions();
 
   const total = sessions.reduce((n, s) => n + s.count, 0);

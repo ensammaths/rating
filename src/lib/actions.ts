@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "./auth";
 import {
   addResponse,
   createSession,
@@ -47,6 +48,7 @@ export async function submitFeedback(
 }
 
 export async function createSessionAction(formData: FormData) {
+  await requireAdmin();
   const title = clean(formData.get("title"), 120);
   if (!title) return;
   await createSession(title);
@@ -54,12 +56,14 @@ export async function createSessionAction(formData: FormData) {
 }
 
 export async function toggleSessionAction(id: string, open: boolean) {
+  await requireAdmin();
   await setSessionOpen(id, open);
   revalidatePath("/");
   revalidatePath(`/results/${id}`);
 }
 
 export async function deleteSessionAction(id: string) {
+  await requireAdmin();
   await deleteSession(id);
   revalidatePath("/");
 }

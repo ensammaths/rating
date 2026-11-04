@@ -1,4 +1,5 @@
 import { getResponses, getSession } from "@/lib/store";
+import { isAdmin } from "@/lib/auth";
 
 const esc = (v: string | number) => `"${String(v).replace(/"/g, '""')}"`;
 
@@ -6,6 +7,7 @@ export async function GET(
   _req: Request,
   ctx: RouteContext<"/results/[id]/csv">,
 ) {
+  if (!(await isAdmin())) return new Response("Unauthorized", { status: 401 });
   const { id } = await ctx.params;
   const session = await getSession(id);
   if (!session) return new Response("Not found", { status: 404 });

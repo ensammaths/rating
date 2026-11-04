@@ -3,6 +3,7 @@ import Link from "next/link";
 import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { getResponses, getSession } from "@/lib/store";
+import { requireAdmin } from "@/lib/auth";
 import { RATINGS } from "@/lib/ratings";
 import { Stars } from "@/components/Stars";
 import ShareButtons from "@/components/ShareButtons";
@@ -12,6 +13,7 @@ import { TopBar } from "@/components/Brand";
 
 async function Results({ params }: { params: Promise<{ id: string }> }) {
   await connection();
+  await requireAdmin();
   const { id } = await params;
   const [session, responses] = await Promise.all([
     getSession(id),

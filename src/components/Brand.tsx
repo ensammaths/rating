@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { logout } from "@/lib/auth-actions";
 
 /** Club logo + wordmark, styled after ensammath.com. */
 export function Brand({
@@ -51,12 +52,19 @@ export function TopBar() {
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-5 py-3">
         <Brand href="/" />
-        <Link
-          href="/"
-          className="hidden border-b-2 border-gold pb-0.5 text-sm font-semibold text-navy sm:block"
-        >
-          Dashboard
-        </Link>
+        <nav className="flex items-center gap-5 text-sm">
+          <Link
+            href="/"
+            className="hidden border-b-2 border-gold pb-0.5 font-semibold text-navy sm:block"
+          >
+            Dashboard
+          </Link>
+          <form action={logout}>
+            <button className="rounded-sm border border-line px-3 py-1.5 font-medium text-muted hover:border-navy hover:text-navy">
+              Log out
+            </button>
+          </form>
+        </nav>
       </div>
     </header>
   );
