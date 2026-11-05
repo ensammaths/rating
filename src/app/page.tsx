@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { listSessions, usingMemoryStore } from "@/lib/store";
 import { requireAdmin } from "@/lib/auth";
+import { publicOrigin } from "@/lib/site";
 import CreateSessionForm from "@/components/CreateSessionForm";
 import SessionRow from "@/components/SessionRow";
 import AutoRefresh from "@/components/AutoRefresh";
@@ -46,7 +47,7 @@ async function Sessions() {
         ) : (
           <ul className="mt-4 space-y-3">
             {sessions.map((s) => (
-              <SessionRow key={s.id} session={s} />
+              <SessionRow key={s.id} session={s} baseUrl={publicOrigin()} />
             ))}
           </ul>
         )}

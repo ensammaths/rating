@@ -4,6 +4,7 @@ import { connection } from "next/server";
 import { notFound } from "next/navigation";
 import { getResponses, getSession } from "@/lib/store";
 import { requireAdmin } from "@/lib/auth";
+import { publicOrigin } from "@/lib/site";
 import { RATINGS } from "@/lib/ratings";
 import { Stars } from "@/components/Stars";
 import ShareButtons from "@/components/ShareButtons";
@@ -57,7 +58,11 @@ async function Results({ params }: { params: Promise<{ id: string }> }) {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
-              <ShareButtons id={session.id} title={session.title} />
+              <ShareButtons
+                id={session.id}
+                title={session.title}
+                baseUrl={publicOrigin()}
+              />
               {count > 0 && (
                 <a
                   href={`/results/${session.id}/csv`}

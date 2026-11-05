@@ -4,22 +4,24 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import QRCode from "qrcode";
 
-function linkFor(id: string) {
-  return `${window.location.origin}/s/${id}`;
+function linkFor(id: string, baseUrl?: string | null) {
+  return `${baseUrl ?? window.location.origin}/s/${id}`;
 }
 
 export default function ShareButtons({
   id,
   title,
+  baseUrl,
 }: {
   id: string;
   title: string;
+  baseUrl?: string | null;
 }) {
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
 
   async function copy() {
-    await navigator.clipboard.writeText(linkFor(id));
+    await navigator.clipboard.writeText(linkFor(id, baseUrl));
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   }
@@ -39,7 +41,12 @@ export default function ShareButtons({
         QR code
       </button>
       {showQr && (
-        <QrModal id={id} title={title} onClose={() => setShowQr(false)} />
+        <QrModal
+          id={id}
+          title={title}
+          baseUrl={baseUrl}
+          onClose={() => setShowQr(false)}
+        />
       )}
     </>
   );
@@ -48,14 +55,16 @@ export default function ShareButtons({
 function QrModal({
   id,
   title,
+  baseUrl,
   onClose,
 }: {
   id: string;
   title: string;
+  baseUrl?: string | null;
   onClose: () => void;
 }) {
   const [svg, setSvg] = useState("");
-  const url = linkFor(id);
+  const url = linkFor(id, baseUrl);
 
   useEffect(() => {
     QRCode.toString(url, {

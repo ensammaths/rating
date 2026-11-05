@@ -9,8 +9,10 @@ import { fmtDate } from "@/lib/format";
 
 export default function SessionRow({
   session: s,
+  baseUrl,
 }: {
   session: SessionSummary;
+  baseUrl: string | null;
 }) {
   const [pending, start] = useTransition();
 
@@ -64,7 +66,7 @@ export default function SessionRow({
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-        <ShareButtons id={s.id} title={s.title} />
+        <ShareButtons id={s.id} title={s.title} baseUrl={baseUrl} />
         <Link
           href={`/results/${s.id}`}
           className="rounded-sm border border-line px-3 py-1.5 font-medium text-navy hover:border-navy"
